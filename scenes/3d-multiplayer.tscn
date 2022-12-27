@@ -1,0 +1,57 @@
+[gd_scene load_steps=11 format=3 uid="uid://cv8us325a2dp"]
+
+[ext_resource type="Script" path="res://scenes/3d-multiplayer.gd" id="1_ddwrj"]
+[ext_resource type="Texture2D" uid="uid://cwuj1r74vvom4" path="res://assets/kenney_prototypetextures/PNG/Dark/texture_01.png" id="1_sw2wu"]
+[ext_resource type="PackedScene" uid="uid://bxmme3xdw2x37" path="res://scenes/player.tscn" id="2_qt6qd"]
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_1dwmi"]
+albedo_texture = ExtResource("1_sw2wu")
+uv1_scale = Vector3(5, 5, 5)
+
+[sub_resource type="PlaneMesh" id="PlaneMesh_krcdd"]
+size = Vector2(20, 20)
+
+[sub_resource type="WorldBoundaryShape3D" id="WorldBoundaryShape3D_s0sp8"]
+
+[sub_resource type="ProceduralSkyMaterial" id="ProceduralSkyMaterial_n2pm2"]
+
+[sub_resource type="Sky" id="Sky_fq8bl"]
+sky_material = SubResource("ProceduralSkyMaterial_n2pm2")
+
+[sub_resource type="Environment" id="Environment_r8yip"]
+background_mode = 2
+sky = SubResource("Sky_fq8bl")
+tonemap_mode = 1
+tonemap_exposure = 1.2
+sdfgi_enabled = true
+volumetric_fog_enabled = true
+volumetric_fog_density = 0.0041
+
+[sub_resource type="CameraAttributesPractical" id="CameraAttributesPractical_jdu5b"]
+
+[node name="3DMultiplayer" type="Node3D"]
+script = ExtResource("1_ddwrj")
+
+[node name="Floor" type="Node3D" parent="."]
+
+[node name="MeshInstance3D" type="MeshInstance3D" parent="Floor"]
+material_override = SubResource("StandardMaterial3D_1dwmi")
+mesh = SubResource("PlaneMesh_krcdd")
+skeleton = NodePath("../..")
+
+[node name="StaticBody3D" type="StaticBody3D" parent="Floor"]
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="Floor/StaticBody3D"]
+shape = SubResource("WorldBoundaryShape3D_s0sp8")
+
+[node name="Player" parent="." instance=ExtResource("2_qt6qd")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.00852077, 0, -2.04987)
+
+[node name="Camera3D" type="Camera3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 0.961262, 0.275637, 0, -0.275637, 0.961262, 0, 3, 2)
+
+[node name="WorldEnvironment" type="WorldEnvironment" parent="."]
+environment = SubResource("Environment_r8yip")
+camera_attributes = SubResource("CameraAttributesPractical_jdu5b")
+
+[node name="CSGCylinder3D" type="CSGCylinder3D" parent="."]

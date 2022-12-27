@@ -1,10 +1,10 @@
-[gd_scene load_steps=3 format=3 uid="uid://bvmm5mgb38ysa"]
+[gd_scene load_steps=3 format=3 uid="uid://dxj5jc1cvymyu"]
 
-[ext_resource type="Script" path="res://main.gd" id="2"]
-[ext_resource type="Script" path="res://link_button.gd" id="3"]
+[ext_resource type="Script" path="res://scenes/main.gd" id="1_rsyb7"]
+[ext_resource type="Script" path="res://scripts/link_button.gd" id="2_r28b0"]
 
 [node name="Main" type="Node"]
-script = ExtResource("2")
+script = ExtResource("1_rsyb7")
 
 [node name="CenterContainer" type="CenterContainer" parent="."]
 anchors_preset = 15
@@ -14,8 +14,11 @@ grow_horizontal = 2
 grow_vertical = 2
 
 [node name="LinkButton" type="LinkButton" parent="CenterContainer"]
-layout_mode = 2
+offset_left = 245.0
+offset_top = 312.0
+offset_right = 906.0
+offset_bottom = 335.0
 text = "Make sure to download the GDNative WebRTC Plugin and place it in the project folder"
-script = ExtResource("3")
+script = ExtResource("2_r28b0")
 
 [connection signal="pressed" from="CenterContainer/LinkButton" to="CenterContainer/LinkButton" method="_on_LinkButton_pressed"]

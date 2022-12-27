@@ -1,0 +1,26 @@
+[gd_resource type="AnimationNodeBlendTree" load_steps=4 format=3 uid="uid://chjhs38yg1ywp"]
+
+[sub_resource type="AnimationNodeAnimation" id="AnimationNodeAnimation_h7csc"]
+animation = &"Run"
+
+[sub_resource type="AnimationNodeAnimation" id="AnimationNodeAnimation_gnbmx"]
+animation = &"Idle"
+
+[sub_resource type="AnimationNodeTransition" id="AnimationNodeTransition_mkrp0"]
+enabled_inputs = 2
+xfade_time = 0.5
+input_0/name = "idle"
+input_0/auto_advance = false
+input_1/name = "run"
+input_1/auto_advance = false
+
+[resource]
+graph_offset = Vector2(-89.6672, 13.7997)
+nodes/Animation/node = SubResource("AnimationNodeAnimation_gnbmx")
+nodes/Animation/position = Vector2(-20, 100)
+"nodes/Animation 2/node" = SubResource("AnimationNodeAnimation_h7csc")
+"nodes/Animation 2/position" = Vector2(-20, 240)
+nodes/Transition/node = SubResource("AnimationNodeTransition_mkrp0")
+nodes/Transition/position = Vector2(200, 120)
+nodes/output/position = Vector2(420, 160)
+node_connections = [&"output", 0, &"Transition", &"Transition", 0, &"Animation", &"Transition", 1, &"Animation 2"]
