@@ -2,10 +2,11 @@ extends Node3D
 
 @onready var mpp := multiplayer.multiplayer_peer as WebRTCMultiplayerPeer
 var peer_id := randi_range(1, 2147483647)
+var room_id := ""
 
 func _ready():
 	mpp = WebRTCMultiplayerPeer.new()
-	%PeerIdLabel.text = "%s" % peer_id
+	%RoomIdEdit.text = "%s" % room_id
 	mpp.create_mesh(peer_id)
 	await get_tree().create_timer(5.0).timeout
 	connect_webrtc_peer(1)
@@ -33,13 +34,16 @@ func on_ice_candidate_created(media: String, idx: int, sdp: String, id: int):
 	send_candidate(id, media, idx, sdp)
 
 func send_offer(dst_id: int, offer: String):
-	TCPTest.send_message(offer)
+	FunctionTest.store_message(room_id, offer)
 
 func send_answer(dst_id: int, answer: String):
-	TCPTest.send_message(answer)
-
+	FunctionTest.store_message(room_id, answer)
+	
 func send_candidate(dst_id: int, media: String, idx: int, sdp: String):	
-	TCPTest.send_message(media)
+	FunctionTest.store_message(room_id, media)
 
 func _on_join_button_pressed():
-	TCPTest.send_message("TEST")
+	room_id = %RoomIdEdit.text
+
+func _on_host_button_pressed():
+	room_id = await FunctionTest.host_room()

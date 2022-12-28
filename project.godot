@@ -29,6 +29,7 @@ config/icon="res://icon.svg"
 
 Signaling="*res://scenes/autoload/signaling.gd"
 TCPTest="*res://scenes/autoload/tcp_test.gd"
+FunctionTest="*res://scenes/autoload/function_test.gd"
 
 [input]
 
