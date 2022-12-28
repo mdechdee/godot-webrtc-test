@@ -40,3 +40,6 @@ func send_answer(dst_id: int, answer: String):
 
 func send_candidate(dst_id: int, media: String, idx: int, sdp: String):	
 	TCPTest.send_message(media)
+
+func _on_join_button_pressed():
+	TCPTest.send_message("TEST")

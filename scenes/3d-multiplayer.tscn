@@ -99,7 +99,7 @@ editable = false
 flat = true
 select_all_on_focus = true
 
-[node name="Button" type="Button" parent="CanvasLayer/Padding/HBoxContainer"]
+[node name="JoinButton" type="Button" parent="CanvasLayer/Padding/HBoxContainer"]
 offset_left = 249.0
 offset_right = 328.0
 offset_bottom = 37.0
@@ -110,3 +110,5 @@ offset_left = 343.0
 offset_right = 502.0
 offset_bottom = 37.0
 size_flags_horizontal = 3
+
+[connection signal="pressed" from="CanvasLayer/Padding/HBoxContainer/JoinButton" to="." method="_on_join_button_pressed"]

@@ -2,9 +2,13 @@ extends Node
 
 var tcp_server: TCPServer = TCPServer.new()
 var connections: Array[StreamPeerTCP] = []
+var DEFAULT_PORT := 7070
 
 func _ready():
-	tcp_server.listen(7070)
+	var port = DEFAULT_PORT
+	while tcp_server.listen(port) != OK:
+		port += 1
+	print(port)
 
 func _process(delta):
 	# Keep communicating with connected TCP connections
@@ -31,5 +35,5 @@ func _process(delta):
 
 func send_message(message: String):
 	for cnn in connections:
-		cnn.put_utf8_string("TEST")
+		cnn.put_utf8_string(message)
 
