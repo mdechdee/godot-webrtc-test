@@ -1,8 +1,8 @@
-[gd_scene load_steps=12 format=3 uid="uid://ctdrvaxa7h8v"]
+[gd_scene load_steps=12 format=3 uid="uid://dq6fxq2ulrj2x"]
 
 [ext_resource type="Script" path="res://scenes/player.gd" id="1_hdy1j"]
 [ext_resource type="PackedScene" uid="uid://cbw8ijfwmu3kk" path="res://assets/person.blend" id="1_xu7nx"]
-[ext_resource type="Script" path="res://scenes/player-debug.gd" id="3_7650u"]
+[ext_resource type="Script" path="res://scenes/player_debug.gd" id="3_uas1o"]
 
 [sub_resource type="AnimationNodeAnimation" id="AnimationNodeAnimation_b54m1"]
 animation = &"Idle"
@@ -45,24 +45,24 @@ unique_name_in_owner = true
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.0488555, 0, -0.00168848)
 
 [node name="Skeleton3D" parent="Person/Armature" index="0"]
-bones/0/position = Vector3(-0.0155937, 3.60597, -0.0268753)
+bones/0/position = Vector3(-0.0155937, 3.59652, -0.0268753)
 bones/0/rotation = Quaternion(-0.0136264, 0.000494315, -6.7363e-06, 0.999907)
-bones/1/rotation = Quaternion(0.979221, 0.071685, -0.171165, -0.0817974)
-bones/2/rotation = Quaternion(-0.117054, 0.000877706, 0.0698707, 0.990664)
-bones/3/rotation = Quaternion(0.676241, 0.302595, 0.0104383, 0.671584)
+bones/1/rotation = Quaternion(0.97785, 0.0762116, -0.171206, -0.0932242)
+bones/2/rotation = Quaternion(-0.135546, 0.000874858, 0.0809087, 0.987462)
+bones/3/rotation = Quaternion(0.683102, 0.299157, 0.00986815, 0.666167)
 bones/4/rotation = Quaternion(0.0278839, -0.00276119, 0.0077802, 0.999577)
 bones/7/rotation = Quaternion(0.0521391, -0.0207183, 0.00106833, 0.998424)
-bones/8/position = Vector3(1.02282, 1.19886, 0.184365)
-bones/8/rotation = Quaternion(0.646306, 0.0948135, -0.74095, 0.15586)
+bones/8/position = Vector3(1.02217, 1.20747, 0.231423)
+bones/8/rotation = Quaternion(0.644967, 0.10217, -0.73929, 0.164406)
 bones/9/rotation = Quaternion(0.0639975, 0.0476115, 0.040059, 0.996008)
 bones/10/rotation = Quaternion(-0.00104894, 0.0134801, -0.172749, 0.984873)
-bones/11/position = Vector3(-1.01952, 0.970664, 0.222698)
-bones/11/rotation = Quaternion(0.645698, -0.0615693, 0.741673, 0.170894)
+bones/11/position = Vector3(-1.02003, 0.997151, 0.223992)
+bones/11/rotation = Quaternion(0.644965, -0.067647, 0.740188, 0.177668)
 bones/12/rotation = Quaternion(0.0469196, -0.0980689, 0.196014, 0.974556)
 bones/13/rotation = Quaternion(0.00353454, 0.0136112, -0.00813352, 0.999868)
-bones/14/rotation = Quaternion(0.988109, -0.0807992, 0.106349, -0.0761679)
-bones/15/rotation = Quaternion(-0.107493, -0.000878995, -0.0641634, 0.992133)
-bones/16/rotation = Quaternion(0.670903, -0.25315, -0.0625467, 0.694185)
+bones/14/rotation = Quaternion(0.986612, -0.0864738, 0.106554, -0.0881196)
+bones/15/rotation = Quaternion(-0.127408, -0.000876159, -0.0760509, 0.98893)
+bones/16/rotation = Quaternion(0.678204, -0.249045, -0.0613827, 0.688657)
 bones/17/position = Vector3(0.794086, 0.337338, 0.091983)
 bones/17/rotation = Quaternion(0.0259001, 0.716299, 0.697222, 0.0112481)
 bones/18/position = Vector3(0.277877, 2.01416, -0.944891)
@@ -82,6 +82,7 @@ parameters/playback = SubResource("AnimationNodeStateMachinePlayback_be0t7")
 
 [node name="Padding" type="Control" parent="CanvasLayer"]
 layout_mode = 3
+anchors_preset = 15
 anchor_right = 1.0
 anchor_bottom = 1.0
 offset_left = 20.0
@@ -106,7 +107,7 @@ anchor_bottom = 0.125
 grow_vertical = 2
 size_flags_horizontal = 4
 size_flags_vertical = 4
-script = ExtResource("3_7650u")
+script = ExtResource("3_uas1o")
 player = NodePath("../../..")
 metadata/_edit_use_anchors_ = true
 

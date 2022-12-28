@@ -1,11 +1,11 @@
-[gd_scene load_steps=11 format=3 uid="uid://cv8us325a2dp"]
+[gd_scene load_steps=11 format=3 uid="uid://5mhijx46g2to"]
 
-[ext_resource type="Script" path="res://scenes/3d-multiplayer.gd" id="1_ddwrj"]
-[ext_resource type="Texture2D" uid="uid://cwuj1r74vvom4" path="res://assets/kenney_prototypetextures/PNG/Dark/texture_01.png" id="1_sw2wu"]
-[ext_resource type="PackedScene" uid="uid://ctdrvaxa7h8v" path="res://scenes/player.tscn" id="2_qt6qd"]
+[ext_resource type="Script" path="res://scenes/3d_multiplayer.gd" id="1_0570j"]
+[ext_resource type="Texture2D" uid="uid://cwuj1r74vvom4" path="res://assets/kenney_prototypetextures/PNG/Dark/texture_01.png" id="2_6moxj"]
+[ext_resource type="PackedScene" uid="uid://ctdrvaxa7h8v" path="res://scenes/player.tscn" id="3_16xin"]
 
 [sub_resource type="StandardMaterial3D" id="StandardMaterial3D_1dwmi"]
-albedo_texture = ExtResource("1_sw2wu")
+albedo_texture = ExtResource("2_6moxj")
 uv1_scale = Vector3(5, 5, 5)
 
 [sub_resource type="PlaneMesh" id="PlaneMesh_krcdd"]
@@ -30,7 +30,7 @@ volumetric_fog_density = 0.0041
 [sub_resource type="CameraAttributesPractical" id="CameraAttributesPractical_jdu5b"]
 
 [node name="3DMultiplayer" type="Node3D"]
-script = ExtResource("1_ddwrj")
+script = ExtResource("1_0570j")
 
 [node name="Floor" type="Node3D" parent="."]
 
@@ -55,7 +55,7 @@ unique_name_in_owner = true
 _spawnable_scenes = PackedStringArray("res://scenes/player.tscn")
 spawn_path = NodePath("..")
 
-[node name="Player" parent="." instance=ExtResource("2_qt6qd")]
+[node name="Player" parent="." instance=ExtResource("3_16xin")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, -1.07766)
 
 [node name="CanvasLayer" type="CanvasLayer" parent="."]
@@ -73,6 +73,7 @@ grow_horizontal = 2
 grow_vertical = 2
 
 [node name="HBoxContainer" type="HBoxContainer" parent="CanvasLayer/Padding"]
+layout_mode = 1
 anchors_preset = -1
 anchor_left = 0.548
 anchor_right = 1.0
@@ -82,33 +83,23 @@ theme_override_constants/separation = 15
 metadata/_edit_use_anchors_ = true
 
 [node name="Label" type="Label" parent="CanvasLayer/Padding/HBoxContainer"]
-offset_top = 5.0
-offset_right = 61.0
-offset_bottom = 31.0
+layout_mode = 2
 text = "Peer ID:"
 
 [node name="PeerIdLabel" type="LineEdit" parent="CanvasLayer/Padding/HBoxContainer"]
 unique_name_in_owner = true
-anchors_preset = -1
-offset_left = 76.0
-offset_right = 234.0
-offset_bottom = 37.0
-grow_horizontal = 0
+layout_mode = 2
 size_flags_horizontal = 3
 editable = false
 flat = true
 select_all_on_focus = true
 
 [node name="JoinButton" type="Button" parent="CanvasLayer/Padding/HBoxContainer"]
-offset_left = 249.0
-offset_right = 328.0
-offset_bottom = 37.0
+layout_mode = 2
 text = "     Join     "
 
 [node name="LineEdit" type="LineEdit" parent="CanvasLayer/Padding/HBoxContainer"]
-offset_left = 343.0
-offset_right = 502.0
-offset_bottom = 37.0
+layout_mode = 2
 size_flags_horizontal = 3
 
 [connection signal="pressed" from="CanvasLayer/Padding/HBoxContainer/JoinButton" to="." method="_on_join_button_pressed"]

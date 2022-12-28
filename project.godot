@@ -21,14 +21,14 @@ _global_script_class_icons={
 [application]
 
 config/name="Godot-webrtc-test"
-run/main_scene="res://scenes/3d-multiplayer.tscn"
+run/main_scene="res://scenes/3d_multiplayer.tscn"
 config/features=PackedStringArray("4.0", "Forward Plus")
 config/icon="res://icon.svg"
 
 [autoload]
 
-Signaling="*res://scenes/autoload/Signaling.gd"
-TCPTest="*res://scenes/tcp-test.gd"
+Signaling="*res://scenes/autoload/signaling.gd"
+TCPTest="*res://scenes/autoload/tcp_test.gd"
 
 [input]
 
