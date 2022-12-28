@@ -2,7 +2,7 @@
 
 [ext_resource type="Script" path="res://scenes/3d-multiplayer.gd" id="1_ddwrj"]
 [ext_resource type="Texture2D" uid="uid://cwuj1r74vvom4" path="res://assets/kenney_prototypetextures/PNG/Dark/texture_01.png" id="1_sw2wu"]
-[ext_resource type="PackedScene" uid="uid://bxmme3xdw2x37" path="res://scenes/player.tscn" id="2_qt6qd"]
+[ext_resource type="PackedScene" uid="uid://ctdrvaxa7h8v" path="res://scenes/player.tscn" id="2_qt6qd"]
 
 [sub_resource type="StandardMaterial3D" id="StandardMaterial3D_1dwmi"]
 albedo_texture = ExtResource("1_sw2wu")
@@ -44,14 +44,69 @@ skeleton = NodePath("../..")
 [node name="CollisionShape3D" type="CollisionShape3D" parent="Floor/StaticBody3D"]
 shape = SubResource("WorldBoundaryShape3D_s0sp8")
 
-[node name="Player" parent="." instance=ExtResource("2_qt6qd")]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.00852077, 0, -2.04987)
-
-[node name="Camera3D" type="Camera3D" parent="."]
-transform = Transform3D(1, 0, 0, 0, 0.961262, 0.275637, 0, -0.275637, 0.961262, 0, 3, 2)
-
 [node name="WorldEnvironment" type="WorldEnvironment" parent="."]
 environment = SubResource("Environment_r8yip")
 camera_attributes = SubResource("CameraAttributesPractical_jdu5b")
 
 [node name="CSGCylinder3D" type="CSGCylinder3D" parent="."]
+
+[node name="PlayerSpawner" type="MultiplayerSpawner" parent="."]
+unique_name_in_owner = true
+_spawnable_scenes = PackedStringArray("res://scenes/player.tscn")
+spawn_path = NodePath("..")
+
+[node name="Player" parent="." instance=ExtResource("2_qt6qd")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, -1.07766)
+
+[node name="CanvasLayer" type="CanvasLayer" parent="."]
+
+[node name="Padding" type="Control" parent="CanvasLayer"]
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_left = 20.0
+offset_top = 20.0
+offset_right = -20.0
+offset_bottom = -20.0
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="HBoxContainer" type="HBoxContainer" parent="CanvasLayer/Padding"]
+anchors_preset = -1
+anchor_left = 0.548
+anchor_right = 1.0
+anchor_bottom = 0.0617284
+grow_horizontal = 0
+theme_override_constants/separation = 15
+metadata/_edit_use_anchors_ = true
+
+[node name="Label" type="Label" parent="CanvasLayer/Padding/HBoxContainer"]
+offset_top = 5.0
+offset_right = 61.0
+offset_bottom = 31.0
+text = "Peer ID:"
+
+[node name="PeerIdLabel" type="LineEdit" parent="CanvasLayer/Padding/HBoxContainer"]
+unique_name_in_owner = true
+anchors_preset = -1
+offset_left = 76.0
+offset_right = 234.0
+offset_bottom = 37.0
+grow_horizontal = 0
+size_flags_horizontal = 3
+editable = false
+flat = true
+select_all_on_focus = true
+
+[node name="Button" type="Button" parent="CanvasLayer/Padding/HBoxContainer"]
+offset_left = 249.0
+offset_right = 328.0
+offset_bottom = 37.0
+text = "     Join     "
+
+[node name="LineEdit" type="LineEdit" parent="CanvasLayer/Padding/HBoxContainer"]
+offset_left = 343.0
+offset_right = 502.0
+offset_bottom = 37.0
+size_flags_horizontal = 3

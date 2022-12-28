@@ -20,28 +20,30 @@ var direction := Vector3.ZERO # actual movement direction
 var facing_dir := Vector3.ZERO # Camera facing direction
 
 func _ready():
-	Input.set_mouse_mode(Input.MOUSE_MODE_CAPTURED)
+	pass
+#	Input.set_mouse_mode(Input.MOUSE_MODE_CAPTURED)
 
 func _unhandled_input(event):
-	if event is InputEventKey:
-		if event.keycode == KEY_ALT:
-			if event.pressed:
-				Input.set_mouse_mode(Input.MOUSE_MODE_VISIBLE)
-			else:
-				Input.set_mouse_mode(Input.MOUSE_MODE_CAPTURED)
-	if event is InputEventMouseMotion:
-		# rotate horizontally around player
-		%SpringArm.rotate(
-			transform.basis.y, 
-			-event.relative.x * CAMERA_ROTATE_SPEED
-			)
-		# rotate vertically around player		
-		%SpringArm.rotate(
-			%SpringArm.transform.basis.z\
-			.cross(transform.basis.y).normalized(), 
-			event.relative.y * CAMERA_ROTATE_SPEED
-		)
-		%SpringArm.rotation.x = clamp(%SpringArm.rotation.x, -PI/4, PI/4)
+	pass
+#	if event is InputEventKey:
+#		if event.keycode == KEY_ALT:
+#			if event.pressed:
+#				Input.set_mouse_mode(Input.MOUSE_MODE_VISIBLE)
+#			else:
+#				Input.set_mouse_mode(Input.MOUSE_MODE_CAPTURED)
+#	if event is InputEventMouseMotion:
+#		# rotate horizontally around player
+#		%SpringArm.rotate(
+#			transform.basis.y, 
+#			-event.relative.x * CAMERA_ROTATE_SPEED
+#			)
+#		# rotate vertically around player		
+#		%SpringArm.rotate(
+#			%SpringArm.transform.basis.z\
+#			.cross(transform.basis.y).normalized(), 
+#			event.relative.y * CAMERA_ROTATE_SPEED
+#		)
+#		%SpringArm.rotation.x = clamp(%SpringArm.rotation.x, -PI/4, PI/4)
 
 func _physics_process(delta):
 	var xform: Transform3D = global_transform

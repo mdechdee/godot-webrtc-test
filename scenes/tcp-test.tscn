@@ -1,0 +1,6 @@
+[gd_scene load_steps=2 format=3 uid="uid://cp4p00c84ot3n"]
+
+[ext_resource type="Script" path="res://scenes/tcp-test.gd" id="1_pgts2"]
+
+[node name="TCPTest" type="Node"]
+script = ExtResource("1_pgts2")
