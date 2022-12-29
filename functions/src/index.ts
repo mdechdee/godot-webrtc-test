@@ -7,7 +7,7 @@ export const helloWorld = functions
     .runWith({memory: "128MB"})
     .https.onRequest((req, res) => {
       console.log(req.path);
-      if (req.path === "/hostRoom") {
+      if (req.method === "POST" && req.path === "/hostRoom") {
         hostRoom(req, res);
       } else if (req.method === "POST" && req.path === "/storeMessage") {
         storeMessage(req, res);

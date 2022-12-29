@@ -47,7 +47,7 @@ func _on_join_button_pressed():
 	%RoomIdEdit.text = room_id
 
 func _on_host_button_pressed():
-	room_id = await FunctionTest.host_room()
+	room_id = await FunctionTest.host_room(peer_id)
 	%RoomIdEdit.text = room_id
 
 func _on_timer_timeout():
