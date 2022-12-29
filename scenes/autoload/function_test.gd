@@ -21,7 +21,6 @@ func host_room():
 	print(body.get_string_from_utf8())
 	return body.get_string_from_utf8()
 
-#
 func store_message(room_id: String, message: String):
 	# Create an HTTP request node and connect its completion signal.
 	var http_request = HTTPRequest.new()

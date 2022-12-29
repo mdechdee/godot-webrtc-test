@@ -6,7 +6,6 @@ var room_id := ""
 
 func _ready():
 	mpp = WebRTCMultiplayerPeer.new()
-	%RoomIdEdit.text = "%s" % room_id
 	mpp.create_mesh(peer_id)
 	await get_tree().create_timer(5.0).timeout
 	connect_webrtc_peer(1)
