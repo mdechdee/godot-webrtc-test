@@ -1,6 +1,5 @@
 import * as functions from "firebase-functions";
 import {firestore} from "./firestore";
-import {Messages} from "./types";
 
 interface RequestBody {
   roomId: string,
