@@ -3,32 +3,31 @@ import {firestore} from "./firestore";
 
 interface RequestBody {
   roomId: string,
-  message: string
+  message: {[key: string]: string | number}
 }
 
 export const storeMessage = functions
     .region("asia-southeast1")
     .runWith({memory: "128MB"})
     .https.onRequest(async (req, res) => {
-      console.log(req.body);
       const {roomId, message}: RequestBody = req.body;
-      const [type, fromId, toId, rtcMessage] = message.split("\n", 4);
+      const {type, src, dst} = message;
+      console.log(type, src, dst);
 
       const peerDocRef = await firestore
           .collection("rooms").doc(roomId)
-          .collection("peers").doc(toId);
+          .collection("peers").doc(dst.toString());
       const snap = await peerDocRef.get();
-      const newMsg = `${fromId}\n${rtcMessage}`;
 
-      if (type === "C") {
+      if (type === "candidate") {
         const candidates = snap.get("candidates") ?? [];
-        await peerDocRef.update({candidates: [...candidates, newMsg]});
-      } else if (type === "O") {
+        await peerDocRef.update({candidates: [...candidates, message]});
+      } else if (type === "offer") {
         const offers = snap.get("offers") ?? [];
-        await peerDocRef.update({offers: [...offers, newMsg]});
-      } else if (type === "A") {
+        await peerDocRef.update({offers: [...offers, message]});
+      } else if (type === "answer") {
         const answers = snap.get("answers") ?? [];
-        await peerDocRef.update({answers: [...answers, newMsg]});
+        await peerDocRef.update({answers: [...answers, message]});
       }
       res.status(200).send("store message done");
     });

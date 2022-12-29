@@ -22,29 +22,33 @@ func connect_webrtc_peer(dst_id: int):
 	
 func on_session_description_created(type: String, sdp: String, dst_id: int):
 	if not mpp.has_peer(dst_id): return
-	print("session_description created: %s %s %d" % [type, sdp, dst_id])
+	print("session_description created: %s | %s | %d" % [type, sdp, dst_id])
 	mpp.get_peer(dst_id).connection.set_local_description(type, sdp)
-	if type == "offer":
-		send_offer(dst_id, sdp)
-	elif type == "answer": 
-		send_answer(dst_id, sdp)
+	FunctionTest.store_message(room_id, {
+		"src": peer_id,
+		"dst": dst_id,
+		"type": type,
+		"sdp": sdp
+	})
 
-func on_ice_candidate_created(media: String, idx: int, sdp: String, id: int):
-	print("ICE created: %s | %d | %s | %d" % [media, idx, sdp, id])
-	send_candidate(id, media, idx, sdp)
 
-func send_offer(dst_id: int, offer: String):
-	FunctionTest.store_message(room_id, "O\n%d\n%d\n%s" % [peer_id, dst_id, offer])
-
-func send_answer(dst_id: int, answer: String):
-	FunctionTest.store_message(room_id, "A\n%d\n%d\n%s" % [peer_id, dst_id, answer])
-	
-func send_candidate(dst_id: int, media: String, idx: int, sdp: String):
-	FunctionTest.store_message(room_id, "C\n%d\n%d\n%s\n%d\n%s" % [peer_id, dst_id, media, idx, sdp])
+func on_ice_candidate_created(media: String, idx: int, sdp: String, dst_id: int):
+	FunctionTest.store_message(room_id, {
+		"src": peer_id,
+		"dst": dst_id,
+		"type": "candidate",
+		"media": media,
+		"idx": idx,
+		"sdp": sdp
+	})
 
 func _on_join_button_pressed():
 	room_id = %JoinEdit.text
 	var peers = await FunctionTest.get_peers(room_id)
+	peers = peers.filter(func(p): return p != peer_id)
+	print(peers)
+	for peer in peers:
+		connect_webrtc_peer(peer)
 	%RoomIdEdit.text = room_id
 
 func _on_host_button_pressed():
