@@ -15,6 +15,5 @@ export const getPeers = functions
       const peerIds = peerDocs.map((peerDoc) => {
         return peerDoc.id;
       });
-      console.log(peerIds);
       res.status(200).send(peerIds);
     });

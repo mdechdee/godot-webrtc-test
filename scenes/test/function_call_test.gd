@@ -44,6 +44,7 @@ func send_candidate(dst_id: int, media: String, idx: int, sdp: String):
 
 func _on_join_button_pressed():
 	room_id = %JoinEdit.text
+	var peers = await FunctionTest.get_peers(room_id)
 	%RoomIdEdit.text = room_id
 
 func _on_host_button_pressed():
