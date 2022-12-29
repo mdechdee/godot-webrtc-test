@@ -34,16 +34,19 @@ func on_ice_candidate_created(media: String, idx: int, sdp: String, id: int):
 	send_candidate(id, media, idx, sdp)
 
 func send_offer(dst_id: int, offer: String):
-	FunctionTest.store_message(room_id, offer)
+	FunctionTest.store_message(room_id, "O %d %s" % [dst_id, offer])
 
 func send_answer(dst_id: int, answer: String):
-	FunctionTest.store_message(room_id, answer)
+	FunctionTest.store_message(room_id, "A %d %s" % [dst_id, answer])
 	
 func send_candidate(dst_id: int, media: String, idx: int, sdp: String):	
-	FunctionTest.store_message(room_id, media)
+	FunctionTest.store_message(room_id, "C %d %s %d %s" % [dst_id, media, idx, sdp])
 
 func _on_join_button_pressed():
-	room_id = %RoomIdEdit.text
+	room_id = %JoinEdit.text
+	%RoomIdEdit.text = room_id
 
 func _on_host_button_pressed():
 	room_id = await FunctionTest.host_room()
+	%RoomIdEdit.text = room_id
+	FunctionTest.store_message("J9HI3", "HI MOM")

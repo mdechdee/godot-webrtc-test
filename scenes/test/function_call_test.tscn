@@ -1,0 +1,6 @@
+[gd_scene load_steps=2 format=3 uid="uid://brenefmlux0fs"]
+
+[ext_resource type="Script" path="res://scenes/test/function_call_test.gd" id="1_6ec7m"]
+
+[node name="FunctionCallTest" type="Node"]
+script = ExtResource("1_6ec7m")

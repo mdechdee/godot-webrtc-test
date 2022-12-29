@@ -8,7 +8,7 @@ export const hostRoom = functions
     .https.onRequest(async (req, res) => {
       const roomId = faker.random.alphaNumeric(5, {casing: "upper"});
       await firestore.collection("rooms").doc(roomId).set({
-        name: faker.name.fullName(),
+        messages: [],
       });
-      res.send(`Create room done ID: ${roomId}`);
+      res.send(`${roomId}`);
     });
