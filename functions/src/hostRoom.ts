@@ -15,6 +15,6 @@ export const hostRoom = functions
       await firestore
           .collection("rooms").doc(roomId)
           .collection("peers").doc(peerId.toString())
-          .set({offers: [], answers: [], candidates: []});
+          .set({messages: []});
       res.send(`${roomId}`);
     });

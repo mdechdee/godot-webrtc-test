@@ -15,6 +15,6 @@ export const joinRoom = functions
       await firestore
           .collection("rooms").doc(roomId)
           .collection("peers").doc(peerId.toString())
-          .set({offers: [], answers: [], candidates: []});
+          .set({messages: []});
       res.status(200).send("Join room done");
     });

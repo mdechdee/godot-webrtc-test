@@ -4,9 +4,7 @@ extends Control
 var peer_id := -1
 var room_id := ""
 
-var offers: Array[Dictionary] = []
-var candidates: Array[Dictionary] = []
-var answers: Array[Dictionary] = []
+var messages_cache: Array[Dictionary] = []
 
 func _ready():
 	peer_id = %PeerIdBox.value
@@ -91,31 +89,20 @@ func _on_poll_timer_timeout():
 	
 	# See if there are new WebRTC messages to update remote description
 	var messages = await FunctionTest.get_messages(room_id, peer_id)
-	if messages == null: return
+	if messages == null || messages == []: return
 	
-	# important!: make sure to process candidates before offer/answer 
-	var new_candidates = messages.candidates
-	new_candidates.filter(func(candidate): !candidates.has(candidate))
-	for new_candidate in new_candidates:
-		var peer = mpp.get_peer(new_candidate.src)
-		peer.connection.add_ice_candidate(
-			new_candidate.media, 
-			new_candidate.idx,
-			new_candidate.sdp
-		)
+	var new_messages = messages.filter(func(msg): !messages_cache.has(msg))
 	
-	var new_offers = messages.offers 
-	new_offers.filter(func(offer): !offers.has(offer))
-	for new_offer in new_offers:
-		var peer = mpp.get_peer(new_offer.src)
-		peer.connection.set_remote_description(new_offer.type, new_offer.sdp)
-	offers = new_offers
-	
-	var new_answers =  messages.answers
-	new_answers.filter(func(answer): !answers.has(answer))
-	for new_answer in new_answers:
-		var peer = mpp.get_peer(new_answer.src)
-		peer.connection.set_remote_description(new_answer.type, new_answer.sdp)
-	
+	for new_message in new_messages:
+		var peer = mpp.get_peer(new_message.src)
+		if new_message.type == "offer" || new_message.type == "answer":
+			peer.connection.set_remote_description(new_message.type, new_message.sdp)
+		elif new_message.type == "candidate":
+			peer.connection.add_ice_candidate(
+				new_message.media, 
+				new_message.idx,
+				new_message.sdp
+			)
+	messages_cache = messages
 
 	
