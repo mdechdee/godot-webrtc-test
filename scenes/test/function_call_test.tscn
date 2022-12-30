@@ -79,7 +79,12 @@ text = "     Join     "
 [node name="Timer" type="Timer" parent="."]
 wait_time = 3.0
 
+[node name="PollTimer" type="Timer" parent="."]
+wait_time = 5.0
+autostart = true
+
 [connection signal="value_changed" from="CanvasLayer/Padding/VBoxContainer/HBoxContainer3/PeerIdBox" to="." method="_on_peer_id_box_value_changed"]
 [connection signal="pressed" from="CanvasLayer/Padding/VBoxContainer/HBoxContainer/HostButton" to="." method="_on_host_button_pressed"]
 [connection signal="pressed" from="CanvasLayer/Padding/VBoxContainer/HBoxContainer2/JoinButton" to="." method="_on_join_button_pressed"]
 [connection signal="timeout" from="Timer" to="." method="_on_timer_timeout"]
+[connection signal="timeout" from="PollTimer" to="." method="_on_poll_timer_timeout"]

@@ -4,6 +4,10 @@ extends Control
 var peer_id := -1
 var room_id := ""
 
+var offers: Array[Dictionary] = []
+var candidates: Array[Dictionary] = []
+var answers: Array[Dictionary] = []
+
 func _ready():
 	peer_id = %PeerIdBox.value
 	mpp = WebRTCMultiplayerPeer.new()
@@ -44,12 +48,17 @@ func on_ice_candidate_created(media: String, idx: int, sdp: String, dst_id: int)
 
 func _on_join_button_pressed():
 	room_id = %JoinEdit.text
-	var peers = await FunctionTest.get_peers(room_id)
-	peers = peers.filter(func(p): return p != peer_id)
-	print(peers)
-	for peer in peers:
-		connect_webrtc_peer(peer)
+	await FunctionTest.join_room(room_id, peer_id)
+	await connect_new_peers()
+	
 	%RoomIdEdit.text = room_id
+	
+func connect_new_peers():
+	var peers = await FunctionTest.get_peers(room_id)
+	var new_peers = peers.filter(func(p): return p != peer_id and !mpp.has_peer(p))
+	print(new_peers)
+	for peer in new_peers:
+		connect_webrtc_peer(peer)
 
 func _on_host_button_pressed():
 	room_id = await FunctionTest.host_room(peer_id)
@@ -72,3 +81,41 @@ func _process(delta):
 
 func _on_peer_id_box_value_changed(value:int):
 	peer_id = value
+
+func _on_poll_timer_timeout():
+	if room_id == "" or peer_id < 0:
+		return
+	
+	# Connect to new peers that are not connected yet
+	await connect_new_peers()
+	
+	# See if there are new WebRTC messages to update remote description
+	var messages = await FunctionTest.get_messages(room_id, peer_id)
+	if messages == null: return
+	
+	# important!: make sure to process candidates before offer/answer 
+	var new_candidates = messages.candidates
+	new_candidates.filter(func(candidate): !candidates.has(candidate))
+	for new_candidate in new_candidates:
+		var peer = mpp.get_peer(new_candidate.src)
+		peer.connection.add_ice_candidate(
+			new_candidate.media, 
+			new_candidate.idx,
+			new_candidate.sdp
+		)
+	
+	var new_offers = messages.offers 
+	new_offers.filter(func(offer): !offers.has(offer))
+	for new_offer in new_offers:
+		var peer = mpp.get_peer(new_offer.src)
+		peer.connection.set_remote_description(new_offer.type, new_offer.sdp)
+	offers = new_offers
+	
+	var new_answers =  messages.answers
+	new_answers.filter(func(answer): !answers.has(answer))
+	for new_answer in new_answers:
+		var peer = mpp.get_peer(new_answer.src)
+		peer.connection.set_remote_description(new_answer.type, new_answer.sdp)
+	
+
+	
