@@ -8,7 +8,6 @@ func _ready():
 	var port = DEFAULT_PORT
 	while tcp_server.listen(port) != OK:
 		port += 1
-	print(port)
 
 func _process(delta):
 	# Keep communicating with connected TCP connections
@@ -21,17 +20,12 @@ func _process(delta):
 		# Get the data from connection
 		var bytes = cnn.get_available_bytes()
 		var data = cnn.get_utf8_string(bytes)
-		if data.length() > 0: print(data)
 
 	# Receive new TCP connection
 	if tcp_server.is_connection_available():
 		var cnn = tcp_server.take_connection()
 		connections.append(cnn)
-		print("%s:%s->%s %d" % [cnn.get_connected_host(), 
-			cnn.get_connected_port(), 
-			cnn.get_local_port(), 
-			cnn.get_status()]
-		)
+
 
 func send_message(message: String):
 	for cnn in connections:

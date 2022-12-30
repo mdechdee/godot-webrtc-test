@@ -1,6 +1,6 @@
 extends Node
 
-const IS_LOCAL = true
+const IS_LOCAL = false
 const LOCAL_ENDPOINT := "http://127.0.0.1:5001/godot-serverless-function/asia-southeast1/helloWorld"
 const PROD_ENDPOINT := "https://asia-southeast1-godot-serverless-function.cloudfunctions.net/helloWorld"
 
@@ -50,7 +50,6 @@ func store_message(room_id: String, message: Dictionary):
 		"roomId": room_id, 
 		"message": message
 	})
-	http_request.request_completed.connect(_http_request_completed)
 	var error = http_request.request(STORE_MESSAGE_ENDPOINT, DEFAULT_POST_HEADER, true, HTTPClient.METHOD_POST, body)
 	if error != OK: push_error("Store Message Failed")
 
@@ -59,7 +58,6 @@ func get_peers(room_id: String) -> Array[int]:
 	var http_request = HTTPRequest.new()
 	add_child(http_request)
 
-	http_request.request_completed.connect(_http_request_completed)
 	var error = http_request.request(GET_PEERS_ENDPOINT+"?roomId="+room_id)
 	if error != OK: push_error("Get Peers Failed")
 
@@ -79,7 +77,6 @@ func get_messages(room_id: String, peer_id: int) -> Array[Dictionary]:
 	var http_request = HTTPRequest.new()
 	add_child(http_request)
 
-	http_request.request_completed.connect(_http_request_completed)
 	var error = http_request.request(GET_MESSAGES_ENDPOINT+"?roomId=%s&peerId=%d" % [room_id, peer_id])
 	if error != OK: push_error("Get Messages Failed")
 
@@ -93,11 +90,3 @@ func get_messages(room_id: String, peer_id: int) -> Array[Dictionary]:
 	
 	if(typeof(data) != TYPE_DICTIONARY): return []
 	return data.messages
-
-func _http_request_completed(result: int, response_code: int, headers: PackedStringArray, body: PackedByteArray):
-	var json = JSON.new()
-	json.parse(body.get_string_from_utf8())
-	var response = json.get_data()
-	print("%d %d" % [result,response_code])
-	print(response)
-

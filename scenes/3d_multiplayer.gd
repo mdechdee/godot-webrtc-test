@@ -21,7 +21,6 @@ func connect_webrtc_peer(dst_id: int):
 	
 func on_session_description_created(type: String, sdp: String, dst_id: int):
 	if not mpp.has_peer(dst_id): return
-	print("session_description created: %s %s %d" % [type, sdp, dst_id])
 	mpp.get_peer(dst_id).connection.set_local_description(type, sdp)
 	if type == "offer":
 		send_offer(dst_id, sdp)
@@ -29,7 +28,6 @@ func on_session_description_created(type: String, sdp: String, dst_id: int):
 		send_answer(dst_id, sdp)
 
 func on_ice_candidate_created(media: String, idx: int, sdp: String, id: int):
-	print("ICE created: %s %d %s %d" % [media, idx, sdp, id])
 	send_candidate(id, media, idx, sdp)
 
 func send_offer(dst_id: int, offer: String):

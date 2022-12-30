@@ -24,7 +24,6 @@ func connect_webrtc_peer(dst_id: int):
 	
 func on_session_description_created(type: String, sdp: String, dst_id: int):
 	if not mpp.has_peer(dst_id): return
-	print("session_description created: %s | %s | %d" % [type, sdp, dst_id])
 	mpp.get_peer(dst_id).connection.set_local_description(type, sdp)
 	FunctionTest.store_message(room_id, {
 		"src": peer_id,
@@ -54,7 +53,6 @@ func _on_join_button_pressed():
 func connect_new_peers():
 	var peers = await FunctionTest.get_peers(room_id)
 	var new_peers = peers.filter(func(p): return p != peer_id and !mpp.has_peer(p))
-	print(new_peers)
 	for peer in new_peers:
 		connect_webrtc_peer(peer)
 
@@ -62,18 +60,6 @@ func _on_host_button_pressed():
 	room_id = await FunctionTest.host_room(peer_id)
 	%RoomIdEdit.text = room_id
 
-func _on_timer_timeout():
-	for id in mpp.get_peers():
-		var connection = mpp.get_peer(id).connection as WebRTCPeerConnection
-		var channels = mpp.get_peer(id).channels as Array[WebRTCDataChannel]
-		var connected = mpp.get_peer(id).connected
-		
-		var channel_0 = channels[0]
-		print(connection.get_connection_state(), " ", connection.get_gathering_state())
-		print(channel_0.get_label()," ", channel_0.get_ready_state())
-		print(connected)
-		print("")
-	
 func _process(delta):
 	mpp.poll()
 
