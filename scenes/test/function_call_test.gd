@@ -1,16 +1,16 @@
 extends Control
 
-@onready var mpp := multiplayer.multiplayer_peer as WebRTCMultiplayerPeer
 var peer_id := -1
 var room_id := ""
+var mpp: WebRTCMultiplayerPeer
 
 var messages_cache: Array[Dictionary] = []
 
 func _ready():
 	peer_id = %PeerIdBox.value
 	mpp = WebRTCMultiplayerPeer.new()
-	mpp.peer_connected.connect(func(id): print("Peer connected %d" % id))
 	mpp.create_mesh(peer_id)
+	get_tree().get_multiplayer().multiplayer_peer = mpp
 
 func connect_webrtc_peer(dst_id: int):
 	var peer: WebRTCPeerConnection = WebRTCPeerConnection.new()
@@ -23,24 +23,26 @@ func connect_webrtc_peer(dst_id: int):
 	peer.create_offer()
 	
 func on_session_description_created(type: String, sdp: String, dst_id: int):
+	print(mpp.get_peers().keys())
 	if not mpp.has_peer(dst_id): return
-	mpp.get_peer(dst_id).connection.set_local_description(type, sdp)
-	FunctionTest.store_message(room_id, {
+	await FunctionTest.store_message(room_id, {
 		"src": peer_id,
 		"dst": dst_id,
 		"type": type,
-		"sdp": sdp
+		"sdp": sdp,
+		"time": Time.get_ticks_usec()
 	})
-
+	mpp.get_peer(dst_id).connection.set_local_description(type, sdp)
 
 func on_ice_candidate_created(media: String, idx: int, sdp: String, dst_id: int):
-	FunctionTest.store_message(room_id, {
+	await FunctionTest.store_message(room_id, {
 		"src": peer_id,
 		"dst": dst_id,
 		"type": "candidate",
 		"media": media,
 		"idx": idx,
-		"sdp": sdp
+		"sdp": sdp,
+		"time": Time.get_ticks_usec()
 	})
 
 func _on_join_button_pressed():
@@ -74,10 +76,11 @@ func _on_poll_timer_timeout():
 	await connect_new_peers()
 	
 	# See if there are new WebRTC messages to update remote description
-	var messages = await FunctionTest.get_messages(room_id, peer_id)
-	if messages == null || messages == []: return
-	
-	var new_messages = messages.filter(func(msg): !messages_cache.has(msg))
+	var messages = await FunctionTest.get_messages(room_id, peer_id) as Array[Dictionary]
+	var new_messages = messages.filter(
+		func(msg): return !messages_cache.has(msg)
+	)
+	new_messages.sort_custom(func(msg1, msg2): return msg1.time < msg2.time)
 	
 	for new_message in new_messages:
 		var peer = mpp.get_peer(new_message.src)
@@ -89,6 +92,20 @@ func _on_poll_timer_timeout():
 				new_message.idx,
 				new_message.sdp
 			)
-	messages_cache = messages
+	messages_cache = messages.duplicate(true)
 
-	
+func _on_timer_timeout():
+	var peers = mpp.get_peers()
+	print("========   %s   ========" % peer_id)
+	print(mpp.get_peers().keys())
+	for id in mpp.get_peers():
+		var connection = mpp.get_peer(id).connection as WebRTCPeerConnection
+		var channels = mpp.get_peer(id).channels as Array[WebRTCDataChannel]
+		var connected = mpp.get_peer(id).connected
+		
+		var channel_0 = channels[0]
+
+		print(connection.get_connection_state(), " ", connection.get_gathering_state())
+		print(channel_0.get_label()," ", channel_0.get_ready_state())
+		print(connected)
+	print("=======================")

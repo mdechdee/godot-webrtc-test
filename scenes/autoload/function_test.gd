@@ -52,6 +52,8 @@ func store_message(room_id: String, message: Dictionary):
 	})
 	var error = http_request.request(STORE_MESSAGE_ENDPOINT, DEFAULT_POST_HEADER, true, HTTPClient.METHOD_POST, body)
 	if error != OK: push_error("Store Message Failed")
+	
+	await http_request.request_completed
 
 # Should return [peer_ids]
 func get_peers(room_id: String) -> Array[int]:
@@ -62,10 +64,6 @@ func get_peers(room_id: String) -> Array[int]:
 	if error != OK: push_error("Get Peers Failed")
 
 	var args = await http_request.request_completed
-	
-	var result: int = args[0]
-	var response_code: int = args[1]
-	var headers: PackedStringArray = args[2]
 	var res_body: PackedByteArray = args[3]
 	var data = JSON.parse_string(res_body.get_string_from_utf8())
 	
@@ -81,10 +79,6 @@ func get_messages(room_id: String, peer_id: int) -> Array[Dictionary]:
 	if error != OK: push_error("Get Messages Failed")
 
 	var args = await http_request.request_completed
-	
-	var result: int = args[0]
-	var response_code: int = args[1]
-	var headers: PackedStringArray = args[2]
 	var res_body: PackedByteArray = args[3]
 	var data = JSON.parse_string(res_body.get_string_from_utf8())
 	

@@ -7,49 +7,63 @@ layout_mode = 3
 anchors_preset = 0
 script = ExtResource("1_6ec7m")
 
-[node name="CanvasLayer" type="CanvasLayer" parent="."]
+[node name="PollTimer" type="Timer" parent="."]
+wait_time = 5.0
+autostart = true
 
-[node name="Padding" type="CenterContainer" parent="CanvasLayer"]
+[node name="Padding" type="CenterContainer" parent="."]
 anchors_preset = 15
 anchor_right = 1.0
 anchor_bottom = 1.0
 offset_left = 20.0
 offset_top = 20.0
-offset_right = -20.0
-offset_bottom = -20.0
+offset_right = 266.0
+offset_bottom = 161.0
 grow_horizontal = 2
 grow_vertical = 2
 
-[node name="VBoxContainer" type="VBoxContainer" parent="CanvasLayer/Padding"]
-layout_mode = 2
+[node name="VBoxContainer" type="VBoxContainer" parent="Padding"]
+offset_right = 246.0
+offset_bottom = 141.0
 theme_override_constants/separation = 24
 
-[node name="HBoxContainer3" type="HBoxContainer" parent="CanvasLayer/Padding/VBoxContainer"]
-layout_mode = 2
+[node name="HBoxContainer3" type="HBoxContainer" parent="Padding/VBoxContainer"]
+offset_right = 246.0
+offset_bottom = 31.0
 
-[node name="Label" type="Label" parent="CanvasLayer/Padding/VBoxContainer/HBoxContainer3"]
-layout_mode = 2
+[node name="Label" type="Label" parent="Padding/VBoxContainer/HBoxContainer3"]
+offset_top = 2.0
+offset_right = 65.0
+offset_bottom = 28.0
 text = "Peer ID: "
 
-[node name="PeerIdBox" type="SpinBox" parent="CanvasLayer/Padding/VBoxContainer/HBoxContainer3"]
+[node name="PeerIdBox" type="SpinBox" parent="Padding/VBoxContainer/HBoxContainer3"]
 unique_name_in_owner = true
-layout_mode = 2
+offset_left = 69.0
+offset_right = 246.0
+offset_bottom = 31.0
 size_flags_horizontal = 3
 min_value = 1.0
 value = 1.0
 
-[node name="HBoxContainer" type="HBoxContainer" parent="CanvasLayer/Padding/VBoxContainer"]
-layout_mode = 2
+[node name="HBoxContainer" type="HBoxContainer" parent="Padding/VBoxContainer"]
+offset_top = 55.0
+offset_right = 246.0
+offset_bottom = 86.0
 theme_override_constants/separation = 15
 metadata/_edit_use_anchors_ = true
 
-[node name="Label" type="Label" parent="CanvasLayer/Padding/VBoxContainer/HBoxContainer"]
-layout_mode = 2
+[node name="Label" type="Label" parent="Padding/VBoxContainer/HBoxContainer"]
+offset_top = 2.0
+offset_right = 71.0
+offset_bottom = 28.0
 text = "Room ID:"
 
-[node name="RoomIdEdit" type="LineEdit" parent="CanvasLayer/Padding/VBoxContainer/HBoxContainer"]
+[node name="RoomIdEdit" type="LineEdit" parent="Padding/VBoxContainer/HBoxContainer"]
 unique_name_in_owner = true
-layout_mode = 2
+offset_left = 86.0
+offset_right = 153.0
+offset_bottom = 31.0
 size_flags_horizontal = 3
 editable = false
 flat = true
@@ -57,30 +71,37 @@ select_all_on_focus = true
 caret_blink = true
 caret_blink_interval = 0.5
 
-[node name="HostButton" type="Button" parent="CanvasLayer/Padding/VBoxContainer/HBoxContainer"]
-layout_mode = 2
+[node name="HostButton" type="Button" parent="Padding/VBoxContainer/HBoxContainer"]
+offset_left = 168.0
+offset_right = 246.0
+offset_bottom = 31.0
 text = "    Host    "
 
-[node name="HBoxContainer2" type="HBoxContainer" parent="CanvasLayer/Padding/VBoxContainer"]
-layout_mode = 2
+[node name="HBoxContainer2" type="HBoxContainer" parent="Padding/VBoxContainer"]
+offset_top = 110.0
+offset_right = 246.0
+offset_bottom = 141.0
 theme_override_constants/separation = 10
 
-[node name="JoinEdit" type="LineEdit" parent="CanvasLayer/Padding/VBoxContainer/HBoxContainer2"]
+[node name="JoinEdit" type="LineEdit" parent="Padding/VBoxContainer/HBoxContainer2"]
 unique_name_in_owner = true
-layout_mode = 2
+offset_right = 157.0
+offset_bottom = 31.0
 size_flags_horizontal = 3
 caret_blink = true
 caret_blink_interval = 0.5
 
-[node name="JoinButton" type="Button" parent="CanvasLayer/Padding/VBoxContainer/HBoxContainer2"]
-layout_mode = 2
+[node name="JoinButton" type="Button" parent="Padding/VBoxContainer/HBoxContainer2"]
+offset_left = 167.0
+offset_right = 246.0
+offset_bottom = 31.0
 text = "     Join     "
 
-[node name="PollTimer" type="Timer" parent="."]
-wait_time = 5.0
-autostart = true
+[node name="Timer" type="Timer" parent="."]
+wait_time = 10.0
 
-[connection signal="value_changed" from="CanvasLayer/Padding/VBoxContainer/HBoxContainer3/PeerIdBox" to="." method="_on_peer_id_box_value_changed"]
-[connection signal="pressed" from="CanvasLayer/Padding/VBoxContainer/HBoxContainer/HostButton" to="." method="_on_host_button_pressed"]
-[connection signal="pressed" from="CanvasLayer/Padding/VBoxContainer/HBoxContainer2/JoinButton" to="." method="_on_join_button_pressed"]
 [connection signal="timeout" from="PollTimer" to="." method="_on_poll_timer_timeout"]
+[connection signal="value_changed" from="Padding/VBoxContainer/HBoxContainer3/PeerIdBox" to="." method="_on_peer_id_box_value_changed"]
+[connection signal="pressed" from="Padding/VBoxContainer/HBoxContainer/HostButton" to="." method="_on_host_button_pressed"]
+[connection signal="pressed" from="Padding/VBoxContainer/HBoxContainer2/JoinButton" to="." method="_on_join_button_pressed"]
+[connection signal="timeout" from="Timer" to="." method="_on_timer_timeout"]

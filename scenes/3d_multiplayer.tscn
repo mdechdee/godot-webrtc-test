@@ -1,8 +1,9 @@
-[gd_scene load_steps=11 format=3 uid="uid://5mhijx46g2to"]
+[gd_scene load_steps=12 format=3 uid="uid://5mhijx46g2to"]
 
 [ext_resource type="Script" path="res://scenes/3d_multiplayer.gd" id="1_0570j"]
 [ext_resource type="Texture2D" uid="uid://cwuj1r74vvom4" path="res://assets/kenney_prototypetextures/PNG/Dark/texture_01.png" id="2_6moxj"]
-[ext_resource type="PackedScene" uid="uid://dq6fxq2ulrj2x" path="res://scenes/player.tscn" id="3_16xin"]
+[ext_resource type="PackedScene" uid="uid://dq6fxq2ulrj2x" path="res://scenes/player.tscn" id="2_3765l"]
+[ext_resource type="PackedScene" uid="uid://brenefmlux0fs" path="res://scenes/test/function_call_test.tscn" id="4_lnjuy"]
 
 [sub_resource type="StandardMaterial3D" id="StandardMaterial3D_1dwmi"]
 albedo_texture = ExtResource("2_6moxj")
@@ -31,6 +32,7 @@ volumetric_fog_density = 0.0041
 
 [node name="3DMultiplayer" type="Node3D"]
 script = ExtResource("1_0570j")
+player_scene = ExtResource("2_3765l")
 
 [node name="Floor" type="Node3D" parent="."]
 
@@ -55,77 +57,14 @@ unique_name_in_owner = true
 _spawnable_scenes = PackedStringArray("res://scenes/player.tscn")
 spawn_path = NodePath("..")
 
-[node name="Player" parent="." instance=ExtResource("3_16xin")]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, -1.07766)
-
 [node name="CanvasLayer" type="CanvasLayer" parent="."]
 
-[node name="Padding" type="Control" parent="CanvasLayer"]
-layout_mode = 3
-anchors_preset = 15
+[node name="FunctionCallTest" parent="CanvasLayer" instance=ExtResource("4_lnjuy")]
+unique_name_in_owner = true
+anchors_preset = 1
+anchor_left = 1.0
 anchor_right = 1.0
-anchor_bottom = 1.0
-offset_left = 20.0
-offset_top = 20.0
-offset_right = -20.0
-offset_bottom = -20.0
-grow_horizontal = 2
-grow_vertical = 2
-
-[node name="VBoxContainer" type="VBoxContainer" parent="CanvasLayer/Padding"]
-anchors_preset = -1
-anchor_left = 0.701
-anchor_right = 1.0
-anchor_bottom = 0.141
-offset_bottom = -19.456
+offset_left = -300.0
+offset_right = -300.0
 grow_horizontal = 0
-theme_override_constants/separation = 24
-
-[node name="HBoxContainer" type="HBoxContainer" parent="CanvasLayer/Padding/VBoxContainer"]
-offset_right = 332.0
-offset_bottom = 31.0
-theme_override_constants/separation = 15
 metadata/_edit_use_anchors_ = true
-
-[node name="Label" type="Label" parent="CanvasLayer/Padding/VBoxContainer/HBoxContainer"]
-offset_top = 2.0
-offset_right = 71.0
-offset_bottom = 28.0
-text = "Room ID:"
-
-[node name="RoomIdEdit" type="LineEdit" parent="CanvasLayer/Padding/VBoxContainer/HBoxContainer"]
-unique_name_in_owner = true
-offset_left = 86.0
-offset_right = 239.0
-offset_bottom = 31.0
-size_flags_horizontal = 3
-editable = false
-flat = true
-select_all_on_focus = true
-
-[node name="HostButton" type="Button" parent="CanvasLayer/Padding/VBoxContainer/HBoxContainer"]
-offset_left = 254.0
-offset_right = 332.0
-offset_bottom = 31.0
-text = "    Host    "
-
-[node name="HBoxContainer2" type="HBoxContainer" parent="CanvasLayer/Padding/VBoxContainer"]
-offset_top = 55.0
-offset_right = 332.0
-offset_bottom = 86.0
-theme_override_constants/separation = 10
-
-[node name="JoinEdit" type="LineEdit" parent="CanvasLayer/Padding/VBoxContainer/HBoxContainer2"]
-unique_name_in_owner = true
-offset_right = 243.0
-offset_bottom = 31.0
-size_flags_horizontal = 3
-
-[node name="JoinButton" type="Button" parent="CanvasLayer/Padding/VBoxContainer/HBoxContainer2"]
-offset_left = 253.0
-offset_right = 332.0
-offset_bottom = 31.0
-text = "     Join     "
-
-[connection signal="pressed" from="CanvasLayer/Padding/VBoxContainer/HBoxContainer/HostButton" to="." method="_on_host_button_pressed"]
-[connection signal="pressed" from="CanvasLayer/Padding/VBoxContainer/HBoxContainer2/JoinButton" to="." method="_on_join_button_pressed"]
