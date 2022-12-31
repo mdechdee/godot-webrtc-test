@@ -1,9 +1,8 @@
-[gd_scene load_steps=12 format=3 uid="uid://5mhijx46g2to"]
+[gd_scene load_steps=11 format=3 uid="uid://5mhijx46g2to"]
 
 [ext_resource type="Script" path="res://scenes/3d_multiplayer.gd" id="1_0570j"]
 [ext_resource type="Texture2D" uid="uid://cwuj1r74vvom4" path="res://assets/kenney_prototypetextures/PNG/Dark/texture_01.png" id="2_6moxj"]
 [ext_resource type="PackedScene" uid="uid://dq6fxq2ulrj2x" path="res://scenes/player.tscn" id="2_3765l"]
-[ext_resource type="PackedScene" uid="uid://brenefmlux0fs" path="res://scenes/test/function_call_test.tscn" id="4_lnjuy"]
 
 [sub_resource type="StandardMaterial3D" id="StandardMaterial3D_1dwmi"]
 albedo_texture = ExtResource("2_6moxj")
@@ -52,19 +51,5 @@ camera_attributes = SubResource("CameraAttributesPractical_jdu5b")
 
 [node name="CSGCylinder3D" type="CSGCylinder3D" parent="."]
 
-[node name="PlayerSpawner" type="MultiplayerSpawner" parent="."]
-unique_name_in_owner = true
-_spawnable_scenes = PackedStringArray("res://scenes/player.tscn")
-spawn_path = NodePath("..")
-
-[node name="CanvasLayer" type="CanvasLayer" parent="."]
-
-[node name="FunctionCallTest" parent="CanvasLayer" instance=ExtResource("4_lnjuy")]
-unique_name_in_owner = true
-anchors_preset = 1
-anchor_left = 1.0
-anchor_right = 1.0
-offset_left = -300.0
-offset_right = -300.0
-grow_horizontal = 0
-metadata/_edit_use_anchors_ = true
+[node name="Player" parent="." instance=ExtResource("2_3765l")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.0253506, 0, 1.87715)

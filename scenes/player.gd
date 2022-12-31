@@ -19,8 +19,18 @@ var input_dir := Vector2.ZERO # input direction (WASD)
 var direction := Vector3.ZERO # actual movement direction
 var facing_dir := Vector3.ZERO # Camera facing direction
 
+@export var synced_position := Vector3.ZERO
+@export var synced_rotation := Vector3.ZERO
+@export var synced_is_running := false
+
 func _ready():
-	pass
+	FunctionCallTest.room_joined.connect(
+		func(room_id, peer_id): 
+			%PeerIdLabel.text = str(FunctionCallTest.peer_id)
+			name = str(FunctionCallTest.peer_id)
+			print("ROOM JOINED %d" % peer_id)
+			set_multiplayer_authority(peer_id)
+	)
 #	Input.set_mouse_mode(Input.MOUSE_MODE_CAPTURED)
 
 func _unhandled_input(event):
@@ -46,13 +56,19 @@ func _unhandled_input(event):
 #		%SpringArm.rotation.x = clamp(%SpringArm.rotation.x, -PI/4, PI/4)
 
 func _physics_process(delta):
+	if !is_multiplayer_authority():
+		global_position = synced_position
+		global_rotation = synced_rotation
+		is_running = synced_is_running
+		return
 	var xform: Transform3D = global_transform
 	input_dir = Input.get_vector("move_left", "move_right", "move_backward", "move_forward")
 	
+	# Determine facing, input direction according to camera view
 	facing_dir = -Plane.PLANE_XZ.project(%SpringArm.transform.basis.z).normalized()
 	var side_dir = -facing_dir.cross(Vector3.UP).normalized()
 	direction = (facing_dir*input_dir.y - side_dir*input_dir.x).normalized()
-		# Ground movement
+	
 	var speed = GROUND_SPEED if is_on_floor() else AIR_SPEED
 	var max_speed = MAX_GROUND_SPEED if is_on_floor() else MAX_AIR_SPEED
 	if direction:
@@ -61,10 +77,15 @@ func _physics_process(delta):
 		%Person.global_transform = %Person.global_transform.interpolate_with(xform, 0.15)
 		velocity.x = move_toward(velocity.x, direction.x*max_speed, speed)
 		velocity.z = move_toward(velocity.z, direction.z*max_speed, speed)
-		
 	else:
 		velocity.x = move_toward(velocity.x, 0, speed)
 		velocity.z = move_toward(velocity.z, 0, speed)
 
 	move_and_slide()
+	
+	# sync properties to peers
+	synced_position = global_position
+	synced_rotation = global_rotation
+	synced_is_running = is_running
+	
 	%SpeedLabel.text = "Velocity: (%f,%f,%f)" % [velocity.x,velocity.y,velocity.z]

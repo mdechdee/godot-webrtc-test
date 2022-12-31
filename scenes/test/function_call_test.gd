@@ -1,4 +1,6 @@
-extends Control
+extends CanvasLayer
+
+signal room_joined(room_id: String, peer_id: int)
 
 var peer_id := -1
 var room_id := ""
@@ -8,9 +10,6 @@ var messages_cache: Array[Dictionary] = []
 
 func _ready():
 	peer_id = %PeerIdBox.value
-	mpp = WebRTCMultiplayerPeer.new()
-	mpp.create_mesh(peer_id)
-	get_tree().get_multiplayer().multiplayer_peer = mpp
 
 func connect_webrtc_peer(dst_id: int):
 	var peer: WebRTCPeerConnection = WebRTCPeerConnection.new()
@@ -23,15 +22,13 @@ func connect_webrtc_peer(dst_id: int):
 	peer.create_offer()
 	
 func on_session_description_created(type: String, sdp: String, dst_id: int):
-	print(mpp.get_peers().keys())
-	if not mpp.has_peer(dst_id): return
 	await FunctionTest.store_message(room_id, {
 		"src": peer_id,
 		"dst": dst_id,
 		"type": type,
-		"sdp": sdp,
-		"time": Time.get_ticks_usec()
+		"sdp": sdp
 	})
+	if not mpp.has_peer(dst_id): return
 	mpp.get_peer(dst_id).connection.set_local_description(type, sdp)
 
 func on_ice_candidate_created(media: String, idx: int, sdp: String, dst_id: int):
@@ -41,36 +38,48 @@ func on_ice_candidate_created(media: String, idx: int, sdp: String, dst_id: int)
 		"type": "candidate",
 		"media": media,
 		"idx": idx,
-		"sdp": sdp,
-		"time": Time.get_ticks_usec()
+		"sdp": sdp
 	})
 
+func _on_host_button_pressed():
+	mpp = WebRTCMultiplayerPeer.new()
+	mpp.create_mesh(peer_id)
+	get_tree().get_multiplayer().multiplayer_peer = mpp
+	room_id = await FunctionTest.host_room(peer_id)
+	%RoomIdEdit.text = room_id
+	room_joined.emit(room_id, peer_id)
+	
 func _on_join_button_pressed():
+	mpp = WebRTCMultiplayerPeer.new()
+	mpp.create_mesh(peer_id)
+	get_tree().get_multiplayer().multiplayer_peer = mpp
+
 	room_id = %JoinEdit.text
 	await FunctionTest.join_room(room_id, peer_id)
-	await connect_new_peers()
 	
+	# Connect to existing peers on the mesh
+	await connect_new_peers()
 	%RoomIdEdit.text = room_id
+	room_joined.emit(room_id, peer_id)
 	
 func connect_new_peers():
 	var peers = await FunctionTest.get_peers(room_id)
-	var new_peers = peers.filter(func(p): return p != peer_id and !mpp.has_peer(p))
+	# get peers from the firestore, connect the ones that are not connected yet
+	var new_peers = peers.filter(
+		func(p): return p != peer_id and !mpp.has_peer(p)
+	)
 	for peer in new_peers:
 		connect_webrtc_peer(peer)
 
-func _on_host_button_pressed():
-	room_id = await FunctionTest.host_room(peer_id)
-	%RoomIdEdit.text = room_id
-
 func _process(delta):
+	if mpp == null: return
 	mpp.poll()
 
 func _on_peer_id_box_value_changed(value:int):
 	peer_id = value
 
 func _on_poll_timer_timeout():
-	if room_id == "" or peer_id < 0:
-		return
+	if mpp == null: return
 	
 	# Connect to new peers that are not connected yet
 	await connect_new_peers()
@@ -80,19 +89,21 @@ func _on_poll_timer_timeout():
 	var new_messages = messages.filter(
 		func(msg): return !messages_cache.has(msg)
 	)
-	new_messages.sort_custom(func(msg1, msg2): return msg1.time < msg2.time)
 	
 	for new_message in new_messages:
 		var peer = mpp.get_peer(new_message.src)
+		var connection = peer.connection as WebRTCPeerConnection
 		if new_message.type == "offer" || new_message.type == "answer":
-			peer.connection.set_remote_description(new_message.type, new_message.sdp)
-		elif new_message.type == "candidate":
+			connection.set_remote_description(new_message.type, new_message.sdp)
+			messages_cache.append(new_message)
+		elif new_message.type == "candidate" and\
+			connection.get_signaling_state() == connection.SIGNALING_STATE_STABLE:
 			peer.connection.add_ice_candidate(
 				new_message.media, 
 				new_message.idx,
 				new_message.sdp
 			)
-	messages_cache = messages.duplicate(true)
+			messages_cache.append(new_message)
 
 func _on_timer_timeout():
 	var peers = mpp.get_peers()

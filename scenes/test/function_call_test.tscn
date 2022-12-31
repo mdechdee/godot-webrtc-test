@@ -2,42 +2,33 @@
 
 [ext_resource type="Script" path="res://scenes/test/function_call_test.gd" id="1_6ec7m"]
 
-[node name="FunctionCallTest" type="Control"]
-layout_mode = 3
-anchors_preset = 0
+[node name="FunctionCallTest" type="CanvasLayer"]
+layer = -1
+follow_viewport_enabled = true
 script = ExtResource("1_6ec7m")
 
-[node name="PollTimer" type="Timer" parent="."]
-wait_time = 5.0
-autostart = true
-
-[node name="Padding" type="CenterContainer" parent="."]
-anchors_preset = 15
+[node name="VBoxContainer" type="VBoxContainer" parent="."]
+anchors_preset = 1
+anchor_left = 1.0
 anchor_right = 1.0
-anchor_bottom = 1.0
-offset_left = 20.0
-offset_top = 20.0
-offset_right = 266.0
-offset_bottom = 161.0
-grow_horizontal = 2
-grow_vertical = 2
-
-[node name="VBoxContainer" type="VBoxContainer" parent="Padding"]
-offset_right = 246.0
-offset_bottom = 141.0
+offset_left = -269.0
+offset_top = 22.0
+offset_right = -23.0
+offset_bottom = 163.0
+grow_horizontal = 0
 theme_override_constants/separation = 24
 
-[node name="HBoxContainer3" type="HBoxContainer" parent="Padding/VBoxContainer"]
+[node name="HBoxContainer3" type="HBoxContainer" parent="VBoxContainer"]
 offset_right = 246.0
 offset_bottom = 31.0
 
-[node name="Label" type="Label" parent="Padding/VBoxContainer/HBoxContainer3"]
+[node name="Label" type="Label" parent="VBoxContainer/HBoxContainer3"]
 offset_top = 2.0
 offset_right = 65.0
 offset_bottom = 28.0
 text = "Peer ID: "
 
-[node name="PeerIdBox" type="SpinBox" parent="Padding/VBoxContainer/HBoxContainer3"]
+[node name="PeerIdBox" type="SpinBox" parent="VBoxContainer/HBoxContainer3"]
 unique_name_in_owner = true
 offset_left = 69.0
 offset_right = 246.0
@@ -46,20 +37,20 @@ size_flags_horizontal = 3
 min_value = 1.0
 value = 1.0
 
-[node name="HBoxContainer" type="HBoxContainer" parent="Padding/VBoxContainer"]
+[node name="HBoxContainer" type="HBoxContainer" parent="VBoxContainer"]
 offset_top = 55.0
 offset_right = 246.0
 offset_bottom = 86.0
 theme_override_constants/separation = 15
 metadata/_edit_use_anchors_ = true
 
-[node name="Label" type="Label" parent="Padding/VBoxContainer/HBoxContainer"]
+[node name="Label" type="Label" parent="VBoxContainer/HBoxContainer"]
 offset_top = 2.0
 offset_right = 71.0
 offset_bottom = 28.0
 text = "Room ID:"
 
-[node name="RoomIdEdit" type="LineEdit" parent="Padding/VBoxContainer/HBoxContainer"]
+[node name="RoomIdEdit" type="LineEdit" parent="VBoxContainer/HBoxContainer"]
 unique_name_in_owner = true
 offset_left = 86.0
 offset_right = 153.0
@@ -71,19 +62,19 @@ select_all_on_focus = true
 caret_blink = true
 caret_blink_interval = 0.5
 
-[node name="HostButton" type="Button" parent="Padding/VBoxContainer/HBoxContainer"]
+[node name="HostButton" type="Button" parent="VBoxContainer/HBoxContainer"]
 offset_left = 168.0
 offset_right = 246.0
 offset_bottom = 31.0
 text = "    Host    "
 
-[node name="HBoxContainer2" type="HBoxContainer" parent="Padding/VBoxContainer"]
+[node name="HBoxContainer2" type="HBoxContainer" parent="VBoxContainer"]
 offset_top = 110.0
 offset_right = 246.0
 offset_bottom = 141.0
 theme_override_constants/separation = 10
 
-[node name="JoinEdit" type="LineEdit" parent="Padding/VBoxContainer/HBoxContainer2"]
+[node name="JoinEdit" type="LineEdit" parent="VBoxContainer/HBoxContainer2"]
 unique_name_in_owner = true
 offset_right = 157.0
 offset_bottom = 31.0
@@ -91,7 +82,7 @@ size_flags_horizontal = 3
 caret_blink = true
 caret_blink_interval = 0.5
 
-[node name="JoinButton" type="Button" parent="Padding/VBoxContainer/HBoxContainer2"]
+[node name="JoinButton" type="Button" parent="VBoxContainer/HBoxContainer2"]
 offset_left = 167.0
 offset_right = 246.0
 offset_bottom = 31.0
@@ -100,8 +91,12 @@ text = "     Join     "
 [node name="Timer" type="Timer" parent="."]
 wait_time = 10.0
 
-[connection signal="timeout" from="PollTimer" to="." method="_on_poll_timer_timeout"]
-[connection signal="value_changed" from="Padding/VBoxContainer/HBoxContainer3/PeerIdBox" to="." method="_on_peer_id_box_value_changed"]
-[connection signal="pressed" from="Padding/VBoxContainer/HBoxContainer/HostButton" to="." method="_on_host_button_pressed"]
-[connection signal="pressed" from="Padding/VBoxContainer/HBoxContainer2/JoinButton" to="." method="_on_join_button_pressed"]
+[node name="PollTimer" type="Timer" parent="."]
+wait_time = 5.0
+autostart = true
+
+[connection signal="value_changed" from="VBoxContainer/HBoxContainer3/PeerIdBox" to="." method="_on_peer_id_box_value_changed"]
+[connection signal="pressed" from="VBoxContainer/HBoxContainer/HostButton" to="." method="_on_host_button_pressed"]
+[connection signal="pressed" from="VBoxContainer/HBoxContainer2/JoinButton" to="." method="_on_join_button_pressed"]
 [connection signal="timeout" from="Timer" to="." method="_on_timer_timeout"]
+[connection signal="timeout" from="PollTimer" to="." method="_on_poll_timer_timeout"]
