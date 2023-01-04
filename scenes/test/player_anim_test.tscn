@@ -1,0 +1,98 @@
+[gd_scene load_steps=11 format=3 uid="uid://yisxxh43mhmk"]
+
+[ext_resource type="Script" path="res://scenes/test/player_anim_test.gd" id="1_8mpp7"]
+[ext_resource type="PackedScene" uid="uid://2pdknm1hbmre" path="res://assets/person.blend" id="1_c5chi"]
+
+[sub_resource type="CylinderShape3D" id="CylinderShape3D_pub26"]
+radius = 0.291982
+
+[sub_resource type="AnimationNodeAnimation" id="AnimationNodeAnimation_bdvmt"]
+animation = &"Idle"
+
+[sub_resource type="AnimationNodeAnimation" id="AnimationNodeAnimation_6q12w"]
+animation = &"Run"
+
+[sub_resource type="AnimationNodeStateMachineTransition" id="AnimationNodeStateMachineTransition_2s1th"]
+advance_mode = 2
+
+[sub_resource type="AnimationNodeStateMachineTransition" id="AnimationNodeStateMachineTransition_vgmb2"]
+advance_mode = 2
+advance_expression = "is_loop_1"
+
+[sub_resource type="AnimationNodeStateMachineTransition" id="AnimationNodeStateMachineTransition_ttt7s"]
+advance_mode = 2
+advance_expression = "!is_loop_1"
+
+[sub_resource type="AnimationNodeStateMachine" id="AnimationNodeStateMachine_kh1li"]
+states/Idle/node = SubResource("AnimationNodeAnimation_bdvmt")
+states/Idle/position = Vector2(423, 100)
+states/Run/node = SubResource("AnimationNodeAnimation_6q12w")
+states/Run/position = Vector2(672, 100)
+transitions = ["Start", "Idle", SubResource("AnimationNodeStateMachineTransition_2s1th"), "Idle", "Run", SubResource("AnimationNodeStateMachineTransition_vgmb2"), "Run", "Idle", SubResource("AnimationNodeStateMachineTransition_ttt7s")]
+graph_offset = Vector2(-235, 14)
+
+[sub_resource type="AnimationNodeStateMachinePlayback" id="AnimationNodeStateMachinePlayback_lidig"]
+
+[node name="PlayerAnimTest" type="CharacterBody3D"]
+script = ExtResource("1_8mpp7")
+
+[node name="person" parent="." instance=ExtResource("1_c5chi")]
+
+[node name="Skeleton3D" parent="person/Armature" index="0"]
+bones/0/position = Vector3(-0.0155937, 3.6413, -0.0268753)
+bones/0/rotation = Quaternion(-0.0136264, 0.000494315, -6.7363e-06, 0.999907)
+bones/1/rotation = Quaternion(0.984378, 0.0444135, -0.169939, -0.0121844)
+bones/2/rotation = Quaternion(-0.00373492, 0.000885953, 0.00222939, 0.99999)
+bones/3/rotation = Quaternion(0.63309, 0.322734, 0.0144188, 0.703443)
+bones/4/rotation = Quaternion(0.0278839, -0.00276119, 0.0077802, 0.999577)
+bones/7/rotation = Quaternion(0.0521391, -0.0207183, 0.00106833, 0.998424)
+bones/8/position = Vector3(1.02525, 1.16656, 0.0078153)
+bones/8/rotation = Quaternion(0.650558, 0.0672056, -0.746289, 0.123734)
+bones/9/rotation = Quaternion(0.0639975, 0.0476115, 0.040059, 0.996008)
+bones/10/rotation = Quaternion(-0.00104894, 0.0134801, -0.172749, 0.984873)
+bones/11/position = Vector3(-1.01764, 0.871292, 0.217845)
+bones/11/rotation = Quaternion(0.647948, -0.0388022, 0.746662, 0.145442)
+bones/12/rotation = Quaternion(0.0469196, -0.0980689, 0.196014, 0.974556)
+bones/13/rotation = Quaternion(0.00353454, 0.0136112, -0.00813352, 0.999868)
+bones/14/rotation = Quaternion(0.993059, -0.0515899, 0.104744, -0.0142178)
+bones/15/rotation = Quaternion(-0.00373534, -0.000885955, -0.00222964, 0.99999)
+bones/16/rotation = Quaternion(0.631886, -0.273875, -0.068841, 0.721784)
+bones/17/position = Vector3(0.794086, 0.337338, 0.091983)
+bones/17/rotation = Quaternion(0.0259001, 0.716299, 0.697222, 0.0112481)
+bones/18/position = Vector3(0.277877, 2.01416, -0.944891)
+bones/19/position = Vector3(-0.874545, 0.337338, 0.091983)
+bones/19/rotation = Quaternion(-0.0321259, 0.716371, 0.696963, -0.00485043)
+bones/20/position = Vector3(-0.417624, 2.03734, -1.2417)
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1, 0)
+shape = SubResource("CylinderShape3D_pub26")
+
+[node name="Camera3D" type="Camera3D" parent="."]
+transform = Transform3D(-1, -1.51808e-08, 8.60946e-08, 0, 0.984808, 0.173648, -8.74228e-08, 0.173648, -0.984808, -2.35974e-07, 2.20693, -4.10732)
+
+[node name="AnimationTree" type="AnimationTree" parent="."]
+tree_root = SubResource("AnimationNodeStateMachine_kh1li")
+anim_player = NodePath("../person/AnimationPlayer")
+advance_expression_base_node = NodePath("..")
+active = true
+parameters/playback = SubResource("AnimationNodeStateMachinePlayback_lidig")
+
+[node name="CanvasLayer" type="CanvasLayer" parent="."]
+
+[node name="Button" type="Button" parent="CanvasLayer"]
+anchors_preset = -1
+anchor_left = 0.437
+anchor_top = 0.272
+anchor_right = 0.618
+anchor_bottom = 0.358
+offset_left = 0.575989
+offset_top = -0.256012
+offset_right = 0.0639648
+offset_bottom = 0.0159912
+text = "toggle loop"
+metadata/_edit_use_anchors_ = true
+
+[connection signal="pressed" from="CanvasLayer/Button" to="." method="_on_button_pressed"]
+
+[editable path="person"]

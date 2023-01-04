@@ -1,0 +1,116 @@
+[gd_scene load_steps=12 format=3 uid="uid://uocjpw2x7ye1"]
+
+[ext_resource type="Script" path="res://scenes/test/loop_anim_tree_test.gd" id="1_wn0d7"]
+
+[sub_resource type="Animation" id="Animation_16yy1"]
+resource_name = "loop_1"
+length = 2.0
+loop_mode = 1
+tracks/0/type = "value"
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/path = NodePath("CanvasLayer/ColorRect:color")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/keys = {
+"times": PackedFloat32Array(0.1, 1.1, 2),
+"transitions": PackedFloat32Array(1, 1, 1),
+"update": 0,
+"values": [Color(1, 1, 1, 1), Color(1, 1, 1, 0), Color(1, 1, 1, 1)]
+}
+
+[sub_resource type="Animation" id="Animation_66ixm"]
+resource_name = "loop_2"
+length = 2.0
+loop_mode = 1
+tracks/0/type = "value"
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/path = NodePath("CanvasLayer/ColorRect:color")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/keys = {
+"times": PackedFloat32Array(0, 1, 2),
+"transitions": PackedFloat32Array(1, 1, 1),
+"update": 0,
+"values": [Color(1, 0, 0, 1), Color(1, 0, 0, 0), Color(1, 0, 0, 1)]
+}
+
+[sub_resource type="AnimationLibrary" id="AnimationLibrary_sfdqb"]
+_data = {
+"loop_1": SubResource("Animation_16yy1"),
+"loop_2": SubResource("Animation_66ixm")
+}
+
+[sub_resource type="AnimationNodeAnimation" id="AnimationNodeAnimation_wk7kp"]
+animation = &"loop_1"
+
+[sub_resource type="AnimationNodeAnimation" id="AnimationNodeAnimation_l0ak8"]
+animation = &"loop_2"
+
+[sub_resource type="AnimationNodeStateMachineTransition" id="AnimationNodeStateMachineTransition_axulk"]
+advance_mode = 2
+
+[sub_resource type="AnimationNodeStateMachineTransition" id="AnimationNodeStateMachineTransition_6lefg"]
+switch_mode = 1
+advance_mode = 2
+advance_expression = "is_loop_1 == false"
+
+[sub_resource type="AnimationNodeStateMachineTransition" id="AnimationNodeStateMachineTransition_3fd7d"]
+switch_mode = 1
+advance_mode = 2
+advance_expression = "is_loop_1 == true"
+
+[sub_resource type="AnimationNodeStateMachine" id="AnimationNodeStateMachine_j4ky4"]
+states/loop_1/node = SubResource("AnimationNodeAnimation_wk7kp")
+states/loop_1/position = Vector2(403, 100)
+states/loop_2/node = SubResource("AnimationNodeAnimation_l0ak8")
+states/loop_2/position = Vector2(623, 100)
+transitions = ["Start", "loop_1", SubResource("AnimationNodeStateMachineTransition_axulk"), "loop_1", "loop_2", SubResource("AnimationNodeStateMachineTransition_6lefg"), "loop_2", "loop_1", SubResource("AnimationNodeStateMachineTransition_3fd7d")]
+graph_offset = Vector2(-497, 13)
+
+[sub_resource type="AnimationNodeStateMachinePlayback" id="AnimationNodeStateMachinePlayback_yoj7w"]
+
+[node name="Node2D" type="Node2D"]
+script = ExtResource("1_wn0d7")
+
+[node name="CanvasLayer" type="CanvasLayer" parent="."]
+
+[node name="ColorRect" type="ColorRect" parent="CanvasLayer"]
+anchors_preset = -1
+anchor_left = 0.444
+anchor_top = 0.395
+anchor_right = 0.611
+anchor_bottom = 0.593
+grow_horizontal = 2
+grow_vertical = 2
+size_flags_horizontal = 4
+size_flags_vertical = 4
+color = Color(1, 1, 1, 0.26234)
+
+[node name="Button" type="Button" parent="CanvasLayer"]
+anchors_preset = -1
+anchor_left = 0.437
+anchor_top = 0.272
+anchor_right = 0.618
+anchor_bottom = 0.358
+offset_left = 0.575989
+offset_top = -0.256012
+offset_right = 0.0639648
+offset_bottom = 0.0159912
+text = "toggle loop"
+metadata/_edit_use_anchors_ = true
+
+[node name="AnimationPlayer" type="AnimationPlayer" parent="."]
+libraries = {
+"": SubResource("AnimationLibrary_sfdqb")
+}
+
+[node name="AnimationTree" type="AnimationTree" parent="."]
+tree_root = SubResource("AnimationNodeStateMachine_j4ky4")
+anim_player = NodePath("../AnimationPlayer")
+advance_expression_base_node = NodePath("..")
+active = true
+parameters/playback = SubResource("AnimationNodeStateMachinePlayback_yoj7w")
+
+[connection signal="pressed" from="CanvasLayer/Button" to="." method="_on_button_pressed"]

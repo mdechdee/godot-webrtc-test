@@ -63,13 +63,15 @@ func _on_join_button_pressed():
 	room_joined.emit(room_id, peer_id)
 	
 func connect_new_peers():
-	var peers = await FunctionTest.get_peers(room_id)
+	var peers = await FunctionTest.get_peers(room_id) as Array[int]
 	# get peers from the firestore, connect the ones that are not connected yet
 	var new_peers = peers.filter(
 		func(p): return p != peer_id and !mpp.has_peer(p)
 	)
+	print(new_peers)
 	for peer in new_peers:
 		connect_webrtc_peer(peer)
+	return peers
 
 func _process(delta):
 	if mpp == null: return
@@ -82,7 +84,7 @@ func _on_poll_timer_timeout():
 	if mpp == null: return
 	
 	# Connect to new peers that are not connected yet
-	await connect_new_peers()
+	var peers = await connect_new_peers()
 	
 	# See if there are new WebRTC messages to update remote description
 	var messages = await FunctionTest.get_messages(room_id, peer_id) as Array[Dictionary]

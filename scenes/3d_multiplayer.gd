@@ -9,7 +9,7 @@ func _ready():
 			var mpp = get_tree().get_multiplayer().multiplayer_peer
 			mpp.peer_connected.connect(on_peer_connected)
 	)
-	
+
 func on_peer_connected(id: int): 
 	print("Peer connected %d" % id)
 	var peer_player: Player = player_scene.instantiate()

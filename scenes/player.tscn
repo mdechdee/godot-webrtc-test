@@ -1,36 +1,8 @@
 [gd_scene load_steps=13 format=3 uid="uid://dq6fxq2ulrj2x"]
 
 [ext_resource type="Script" path="res://scenes/player.gd" id="1_hdy1j"]
-[ext_resource type="PackedScene" uid="uid://cbw8ijfwmu3kk" path="res://assets/person.blend" id="1_xu7nx"]
+[ext_resource type="PackedScene" uid="uid://2pdknm1hbmre" path="res://assets/person.blend" id="1_xu7nx"]
 [ext_resource type="Script" path="res://scenes/player_debug.gd" id="3_uas1o"]
-
-[sub_resource type="AnimationNodeAnimation" id="AnimationNodeAnimation_b54m1"]
-animation = &"Idle"
-
-[sub_resource type="AnimationNodeAnimation" id="AnimationNodeAnimation_6f8yw"]
-animation = &"Run"
-
-[sub_resource type="AnimationNodeStateMachineTransition" id="AnimationNodeStateMachineTransition_yjwmx"]
-auto_advance = true
-
-[sub_resource type="AnimationNodeStateMachineTransition" id="AnimationNodeStateMachineTransition_nyim4"]
-xfade_time = 0.1
-advance_expression = "direction.length() > 0.1"
-
-[sub_resource type="AnimationNodeStateMachineTransition" id="AnimationNodeStateMachineTransition_t5btj"]
-xfade_time = 0.1
-advance_expression = "direction.length() <= 0.1 && velocity.length() <= 0.0001"
-
-[sub_resource type="AnimationNodeStateMachine" id="AnimationNodeStateMachine_818no"]
-states/End/position = Vector2(662, 100)
-states/Idle/node = SubResource("AnimationNodeAnimation_b54m1")
-states/Idle/position = Vector2(350, 100)
-states/Run/node = SubResource("AnimationNodeAnimation_6f8yw")
-states/Run/position = Vector2(489, 100)
-transitions = ["Start", "Idle", SubResource("AnimationNodeStateMachineTransition_yjwmx"), "Idle", "Run", SubResource("AnimationNodeStateMachineTransition_nyim4"), "Run", "Idle", SubResource("AnimationNodeStateMachineTransition_t5btj")]
-graph_offset = Vector2(-19, -22)
-
-[sub_resource type="AnimationNodeStateMachinePlayback" id="AnimationNodeStateMachinePlayback_be0t7"]
 
 [sub_resource type="CylinderShape3D" id="CylinderShape3D_d0yny"]
 height = 1.8
@@ -40,54 +12,44 @@ radius = 0.305
 properties/0/path = NodePath(".:synced_position")
 properties/0/spawn = true
 properties/0/sync = true
-properties/1/path = NodePath(".:synced_rotation")
+properties/1/path = NodePath(".:synced_direction")
 properties/1/spawn = true
 properties/1/sync = true
-properties/2/path = NodePath(".:synced_is_running")
+properties/2/path = NodePath(".:synced_velocity")
 properties/2/spawn = true
 properties/2/sync = true
+
+[sub_resource type="AnimationNodeAnimation" id="AnimationNodeAnimation_0w2iw"]
+animation = &"Idle"
+
+[sub_resource type="AnimationNodeAnimation" id="AnimationNodeAnimation_xldqd"]
+animation = &"Run"
+
+[sub_resource type="AnimationNodeStateMachineTransition" id="AnimationNodeStateMachineTransition_s0qp5"]
+advance_mode = 2
+
+[sub_resource type="AnimationNodeStateMachineTransition" id="AnimationNodeStateMachineTransition_2t61c"]
+advance_mode = 2
+advance_expression = "velocity.length() > 0.1"
+
+[sub_resource type="AnimationNodeStateMachineTransition" id="AnimationNodeStateMachineTransition_0p1xb"]
+advance_mode = 2
+advance_expression = "velocity.length() <= 0.1"
+
+[sub_resource type="AnimationNodeStateMachine" id="AnimationNodeStateMachine_mecqo"]
+states/End/position = Vector2(839, 100)
+states/Idle/node = SubResource("AnimationNodeAnimation_0w2iw")
+states/Idle/position = Vector2(382, 100)
+states/Run/node = SubResource("AnimationNodeAnimation_xldqd")
+states/Run/position = Vector2(681, 100)
+transitions = ["Start", "Idle", SubResource("AnimationNodeStateMachineTransition_s0qp5"), "Idle", "Run", SubResource("AnimationNodeStateMachineTransition_2t61c"), "Run", "Idle", SubResource("AnimationNodeStateMachineTransition_0p1xb")]
+graph_offset = Vector2(-575, 44)
+
+[sub_resource type="AnimationNodeStateMachinePlayback" id="AnimationNodeStateMachinePlayback_qkee1"]
 
 [node name="Player" type="CharacterBody3D"]
 floor_constant_speed = true
 script = ExtResource("1_hdy1j")
-
-[node name="Person" parent="." instance=ExtResource("1_xu7nx")]
-unique_name_in_owner = true
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.0488555, 0, -0.00168848)
-
-[node name="Skeleton3D" parent="Person/Armature" index="0"]
-bones/0/position = Vector3(-0.0155937, 3.62534, -0.0268753)
-bones/0/rotation = Quaternion(-0.0136264, 0.000494315, -6.7363e-06, 0.999907)
-bones/1/rotation = Quaternion(0.98234, 0.05878, -0.170758, -0.0489357)
-bones/2/rotation = Quaternion(-0.0636605, 0.00088353, 0.0379994, 0.997248)
-bones/3/rotation = Quaternion(0.65615, 0.31226, 0.0122541, 0.686884)
-bones/4/rotation = Quaternion(0.0278839, -0.00276119, 0.0077802, 0.999577)
-bones/7/rotation = Quaternion(0.0521391, -0.0207183, 0.00106833, 0.998424)
-bones/8/position = Vector3(1.02415, 1.18121, 0.087871)
-bones/8/rotation = Quaternion(0.648787, 0.0796879, -0.744048, 0.13827)
-bones/9/rotation = Quaternion(0.0639975, 0.0476115, 0.040059, 0.996008)
-bones/10/rotation = Quaternion(-0.00104894, 0.0134801, -0.172749, 0.984873)
-bones/11/position = Vector3(-1.01849, 0.916352, 0.220046)
-bones/11/rotation = Quaternion(0.647028, -0.0490889, 0.74452, 0.156957)
-bones/12/rotation = Quaternion(0.0469196, -0.0980689, 0.196014, 0.974556)
-bones/13/rotation = Quaternion(0.00353454, 0.0136112, -0.00813352, 0.999868)
-bones/14/rotation = Quaternion(0.991756, -0.0625949, 0.105353, -0.037457)
-bones/15/rotation = Quaternion(-0.0427187, -0.000884859, -0.0254991, 0.998761)
-bones/16/rotation = Quaternion(0.646725, -0.266184, -0.066557, 0.711662)
-bones/17/position = Vector3(0.794086, 0.337338, 0.091983)
-bones/17/rotation = Quaternion(0.0259001, 0.716299, 0.697222, 0.0112481)
-bones/18/position = Vector3(0.277877, 2.01416, -0.944891)
-bones/19/position = Vector3(-0.874545, 0.337338, 0.091983)
-bones/19/rotation = Quaternion(-0.0321259, 0.716371, 0.696963, -0.00485043)
-bones/20/position = Vector3(-0.417624, 2.03734, -1.2417)
-
-[node name="AnimationTree" type="AnimationTree" parent="."]
-unique_name_in_owner = true
-tree_root = SubResource("AnimationNodeStateMachine_818no")
-anim_player = NodePath("../Person/AnimationPlayer")
-advance_expression_base_node = NodePath("..")
-active = true
-parameters/playback = SubResource("AnimationNodeStateMachinePlayback_be0t7")
 
 [node name="CanvasLayer" type="CanvasLayer" parent="."]
 
@@ -142,5 +104,42 @@ unique_name_in_owner = true
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 2.00703, 0)
 billboard = 1
 text = "TEST"
+
+[node name="Person" parent="." instance=ExtResource("1_xu7nx")]
+unique_name_in_owner = true
+
+[node name="Skeleton3D" parent="Person/Armature" index="0"]
+bones/0/position = Vector3(-0.0155937, 3.61855, -0.0268753)
+bones/0/rotation = Quaternion(-0.0136264, 0.000494315, -6.7363e-06, 0.999907)
+bones/1/rotation = Quaternion(0.981166, 0.0642321, -0.170983, -0.0628681)
+bones/2/rotation = Quaternion(-0.0863304, 0.000881482, 0.0515312, 0.994933)
+bones/3/rotation = Quaternion(0.664732, 0.308202, 0.0114523, 0.680449)
+bones/4/rotation = Quaternion(0.0278839, -0.00276119, 0.0077802, 0.999577)
+bones/7/rotation = Quaternion(0.0521391, -0.0207183, 0.00106833, 0.998424)
+bones/8/position = Vector3(1.02368, 1.1874, 0.121713)
+bones/8/rotation = Quaternion(0.647958, 0.084998, -0.743008, 0.144448)
+bones/9/rotation = Quaternion(0.0639975, 0.0476115, 0.040059, 0.996008)
+bones/10/rotation = Quaternion(-0.00104894, 0.0134801, -0.172749, 0.984873)
+bones/11/position = Vector3(-1.01885, 0.9354, 0.220976)
+bones/11/rotation = Quaternion(0.646588, -0.0534672, 0.743552, 0.16185)
+bones/12/rotation = Quaternion(0.0469196, -0.0980689, 0.196014, 0.974556)
+bones/13/rotation = Quaternion(0.00353454, 0.0136112, -0.00813352, 0.999868)
+bones/14/rotation = Quaternion(0.990295, -0.0709905, 0.105879, -0.0553781)
+bones/15/rotation = Quaternion(-0.0727463, -0.000882771, -0.0434229, 0.996404)
+bones/16/rotation = Quaternion(0.658018, -0.260199, -0.0646542, 0.703654)
+bones/17/position = Vector3(0.794086, 0.337338, 0.091983)
+bones/17/rotation = Quaternion(0.0259001, 0.716299, 0.697222, 0.0112481)
+bones/18/position = Vector3(0.277877, 2.01416, -0.944891)
+bones/19/position = Vector3(-0.874545, 0.337338, 0.091983)
+bones/19/rotation = Quaternion(-0.0321259, 0.716371, 0.696963, -0.00485043)
+bones/20/position = Vector3(-0.417624, 2.03734, -1.2417)
+
+[node name="AnimationTree" type="AnimationTree" parent="."]
+unique_name_in_owner = true
+tree_root = SubResource("AnimationNodeStateMachine_mecqo")
+anim_player = NodePath("../Person/AnimationPlayer")
+advance_expression_base_node = NodePath("..")
+active = true
+parameters/playback = SubResource("AnimationNodeStateMachinePlayback_qkee1")
 
 [editable path="Person"]
